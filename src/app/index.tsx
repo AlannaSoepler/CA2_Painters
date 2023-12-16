@@ -31,6 +31,7 @@ export default function Page() {
               <TouchableOpacity onPress={signOut}>
                 <Text>Logout</Text>
               </TouchableOpacity>
+              <Text></Text>
             ),
           }}
         />
