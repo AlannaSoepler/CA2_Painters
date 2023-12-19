@@ -1,29 +1,27 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import DeleteBtn from './deleteBtn';
 import EditBtn from './EditBtn';
 import ViewBtn from './ViewBtn';
 import { Avatar, Card } from 'react-native-paper';
-import type { PropsWithChildren } from 'react';
 
 interface MyProps {
-  museum: {
+  work: {
     _id: string;
-    name: string;
-    address: string;
+    title: string;
+    style: string;
   };
   onDelete?: (id?: string) => void;
 }
 
-export default function MuseumItem({ museum, onDelete }: MyProps) {
+export default function WorkItem({ work, onDelete }: MyProps) {
   const router = useRouter();
   return (
     <Card style={styles.cards}>
-      <Link href={`/museums/${museum._id}`}>
+      <Link href={`/works/${work._id}`}>
         <Card.Title
-          title={museum.name}
-          subtitle={museum.address}
+          title={work.title}
           left={(props) => (
             <Avatar.Image
               {...props}
@@ -35,13 +33,9 @@ export default function MuseumItem({ museum, onDelete }: MyProps) {
         />
       </Link>
       <Card.Actions style={styles.cards_actions}>
-        <ViewBtn resource="museums" id={museum._id} />
-        <EditBtn resource="museums" id={museum._id} />
-        <DeleteBtn
-          resource="museums"
-          id={museum._id}
-          deleteCallback={onDelete}
-        />
+        <ViewBtn resource="works" id={work._id} />
+        <EditBtn resource="works" id={work._id} />
+        <DeleteBtn resource="works" id={work._id} deleteCallback={onDelete} />
       </Card.Actions>
     </Card>
   );

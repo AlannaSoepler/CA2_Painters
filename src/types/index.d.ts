@@ -1,3 +1,6 @@
+import { ObjectId } from 'mongoose';
+//These are the types that are used in the application
+
 export interface MyAuthContext {
   signIn: (token: string) => void;
   signOut: () => void;
@@ -8,6 +11,23 @@ export interface MyAuthContext {
 export interface LoginFormType {
   email?: string;
   password?: string;
+}
+
+export interface RegisterFormType {
+  email?: string;
+  password?: string;
+  password_confirmation?: string;
+}
+
+export interface BtnProp {
+  id: string;
+  resource: string;
+}
+
+export interface DeleteBtnProp {
+  resource: string;
+  id: string;
+  deleteCallback?: (id?: string) => void;
 }
 
 export interface ArtistType {
@@ -30,4 +50,10 @@ export interface MuseumType {
   country: string;
   phone: number;
   url: string;
+}
+//Would be better for the user if it backend expected the name rather then the id
+export interface WorkType {
+  title: string;
+  artist_id: ObjectId | null;
+  museum_id: ObjectId | null;
 }

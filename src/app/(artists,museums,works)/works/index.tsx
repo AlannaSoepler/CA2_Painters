@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Text, FlatList, Button } from 'react-native';
+import { Text, FlatList, Button, View } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import MuseumItem from '../../../components/MuseumItem';
+import WorkItem from '../../../components/WorkItem';
+import { StyleSheet } from 'react-native';
+import CreateBtn from '../../../components/CreateBtn';
 
-export default function MuseumPage() {
-  const [museums, setMuseums] = useState([]);
+export default function WorkPage() {
+  const [works, setWorks] = useState([]);
 
   useEffect(() => {
     axios
-      .get('https://ca-1-paintings.vercel.app/api/museums')
+      .get('https://ca-1-paintings.vercel.app/api/works')
       .then((response) => {
         console.log(response.data);
-        setMuseums(response.data);
+        setWorks(response.data);
       })
       .catch((e) => {
         console.error(e);
@@ -20,13 +22,32 @@ export default function MuseumPage() {
   }, []);
 
   const onDelete = (id?: string) => {
-    let newMuseums = museums.filter((museum: any) => museum._id !== id);
-    setMuseums(newMuseums);
+    let newWorks = works.filter((work: any) => work._id !== id);
+    setWorks(newWorks);
   };
 
-  let museumsList = museums.map((museum: any) => {
-    return <MuseumItem key={museum._id} museum={museum} onDelete={onDelete} />;
+  let worksList = works.map((work: any) => {
+    return <WorkItem key={work._id} work={work} onDelete={onDelete} />;
   });
 
-  return <>{museumsList}</>;
+  return (
+    <>
+      <>
+        <CreateBtn resource="works" />
+        <View style={styles.container}>{worksList}</View>
+      </>
+    </>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignContent: 'center',
+    marginTop: 8,
+    maxHeight: 200,
+  },
+});

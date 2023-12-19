@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Button } from 'react-native';
+import { Button, Pressable, Text, StyleSheet } from 'react-native';
 import { useSession } from '../contexts/AuthContext';
 import { useState } from 'react';
 
@@ -34,10 +34,26 @@ export default function DeleteBtn({
       });
   };
   return (
-    <Button
-      title={deleting ? 'Deleting...' : 'Delete'}
-      onPress={handleDelete}
-      color="#ff0000"
-    />
+    <>
+      <Pressable style={styles.pressable} onPress={handleDelete}>
+        <Text style={styles.pressableText}>
+          {deleting ? 'Deleting...' : 'Delete'}
+        </Text>
+      </Pressable>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  pressable: {
+    backgroundColor: '#35401A',
+    borderRadius: 5,
+    padding: 10,
+    width: 60,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  pressableText: {
+    color: '#FFFFFF',
+  },
+});

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Text, FlatList, Button } from 'react-native';
+import { Text, FlatList, Button, View } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import MuseumItem from '../../../components/MuseumItem';
+import { StyleSheet } from 'react-native';
+import CreateBtn from '../../../components/CreateBtn';
 
 export default function MuseumPage() {
   const [museums, setMuseums] = useState([]);
@@ -28,5 +30,24 @@ export default function MuseumPage() {
     return <MuseumItem key={museum._id} museum={museum} onDelete={onDelete} />;
   });
 
-  return <>{museumsList}</>;
+  return (
+    <>
+      <>
+        <CreateBtn resource="museums" />
+        <View style={styles.container}>{museumsList}</View>
+      </>
+    </>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignContent: 'center',
+    marginTop: 8,
+    maxHeight: 200,
+  },
+});

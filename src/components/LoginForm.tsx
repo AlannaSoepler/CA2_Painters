@@ -3,38 +3,44 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useSession } from '../contexts/AuthContext';
 import { LoginFormType } from '../types';
-
+//this is the login form
+//It is a component that is used in the login page
+//It is also used in the header component
 export default function LoginForm() {
   const { signIn } = useSession();
+  //signIn is a function that is used to set the session token
 
+  //This is the form state
+  //it is an object with two properties: email and password
   const [form, setForm] = useState<LoginFormType>({
     email: '',
     password: '',
   });
   const [error, setError] = useState('');
-
+  //This gets called when the user types in the form
+  //it updates the form
   const handleChange = (e: any) => {
     setForm((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
   };
-
+//This gets called when the user clicks the submit button
+//Makes a POST request to the login endpoint
+//If the request is successful, the session token is set
   const handleClick = () => {
-    console.log('clicked', form);
-
     axios
       .post('https://ca-1-paintings.vercel.app/api/users/login', form)
       .then((response) => {
         console.log(response.data);
         signIn(response.data.token);
       })
+      //If not the error message is set
       .catch((e) => {
-        // console.error(e);
         setError(e.response.data.message);
       });
   };
-
+//This is the form
   return (
     <>
       <TextInput

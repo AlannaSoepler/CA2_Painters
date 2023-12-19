@@ -4,13 +4,14 @@ import { Drawer } from 'expo-router/drawer';
 import { SessionProvider, useSession } from '../contexts/AuthContext';
 import { Text, Button } from 'react-native';
 import { Link } from 'expo-router';
-
+//this is the layout for the navigation bar
+//It gets the header names based on the folder structure
 export default function Layout() {
-  //const { session, signOut } = useSession();
+
   return (
     <SessionProvider>
       <Drawer>
-        <Drawer.Screen
+        <Drawer.Screen 
           name="index"
           options={{
             drawerLabel: 'Home',

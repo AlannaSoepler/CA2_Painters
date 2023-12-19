@@ -15,10 +15,13 @@ export function useSession():any {
 
   return value;
 }
-
+//this is the session provider
+//it checks if the user is logged in or not
 export function SessionProvider(props: React.PropsWithChildren) {
+  //setSession is a function that sets the session
   const [[isLoading, session], setSession] = useStorageState('session');
-
+  //isLoading is a boolean that checks if the user is logged in or not
+  //session is the token that is stored in the local storage
   return (
     <AuthContext.Provider
       value={{

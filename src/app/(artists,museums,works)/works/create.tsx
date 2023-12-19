@@ -1,27 +1,31 @@
-import axios from 'axios';
-import { useState } from 'react';
-import { TextInput, StyleSheet, Button, Text } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  TextInput,
+  Button,
+} from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { useSession } from '../../../contexts/AuthContext';
-import { MuseumType } from '../../../types';
+import BackBtn from '../../../components/BackBtn';
+import { ArtistType, MuseumType, WorkType } from '../../../types';
+import { useRouter } from 'expo-router';
+import axios from 'axios';
 
-export default function Page() {
+export default function WorkEditPage() {
   const { session, isLoading } = useSession();
+  const [work, setWork] = useState<WorkType | null>(null);
   const [error, setError] = useState('');
+  const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  const [form, setForm] = useState<MuseumType>({
-    name: '',
-    address: '',
-    city: '',
-    state: '',
-    postal_code: '',
-    country: '',
-    phone: 0,
-    url: '',
+  const [form, setForm] = useState<WorkType>({
+    title: '',
+    artist_id: null,
+    museum_id: null,
   });
-
-  if (isLoading) return <Text>Loading...</Text>;
 
   const handleChange = (e: any) => {
     setForm((prevState) => ({
@@ -32,114 +36,91 @@ export default function Page() {
 
   const handleClick = () => {
     console.log(form);
-
     axios
-      .post(`https://ca-1-paintings.vercel.app/api/museums/`, form, {
+      .post(`https://ca-1-paintings.vercel.app/api/works/`, form, {
         headers: {
           Authorization: `Bearer ${session}`,
         },
       })
       .then((response) => {
         console.log(response.data);
-        router.push(`/museums/${response.data._id}`);
+        router.push(`/works/${response.data._id}`);
       })
       .catch((e) => {
         console.error(e);
-        setError(e.response.data.message);
+        setError(e.response?.data?.message || 'An error occurred');
       });
   };
 
+  if (isLoading) return <Text style={styles.loadingText}>Loading...</Text>;
+
   return (
-    <>
-      <Text>Name</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        onChange={handleChange}
-        value={form.name}
-        id="name"
-      />
-
-      <Text>Address</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Address"
-        onChange={handleChange}
-        value={form.address}
-        id="address"
-      />
-
-      <Text>City</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="City"
-        onChange={handleChange}
-        value={form.city}
-        id="city"
-      />
-
-      <Text>State</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="state"
-        onChange={handleChange}
-        value={form.state}
-        id="state"
-      />
-
-      <Text>Postal Code</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Postal Code"
-        onChange={handleChange}
-        value={form.postal_code}
-        id="postal_code"
-      />
-
-      <Text>Country</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Country"
-        onChange={handleChange}
-        value={form.country}
-        id="country"
-      />
-
-      <Text>Phone</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Phone"
-        onChange={handleChange}
-        value={form.phone}
-        id="phone"
-      />
-
-      <Text>URL</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="url"
-        onChange={handleChange}
-        value={form.url}
-        id="url"
-      />
-
-      <Text>{error}</Text>
-
-      <Button
-        onPress={handleClick}
-        title="Submit"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
-    </>
+    <SafeAreaView>
+      <View style={styles.button_actions}>
+        <BackBtn resource="works" />
+      </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>Edit Work</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Full Name"
+          onChange={handleChange}
+          value={form.title}
+          id="title"
+        />
+        <Text>Artist</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Artist id"
+          onChange={handleChange}
+          id="artist_id"
+        />
+        <Text>Museum</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Museum id"
+          onChange={handleChange}
+          id="museum_id"
+        />
+        <Button onPress={handleClick} title="Save" />
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
   input: {
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
+  },
+  loadingText: {
+    fontSize: 18,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 16,
+  },
+  button_actions: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignContent: 'center',
+    maxWidth: 300,
   },
 });
